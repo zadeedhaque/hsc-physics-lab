@@ -9,7 +9,10 @@ import { ParamControls } from './ParamControls';
 import { Graph } from './Graph';
 import { EquationList, LearnPanel, ResultsGrid, Section, formatReadout } from './Panels';
 import { ExperimentPanel } from './ExperimentPanel';
-import { IconBook, IconCamera, IconFunction, IconGauge, IconPause, IconPlay, IconRecord, IconReset, IconRestart, IconSliders, IconStep } from '../icons';
+import { IconBook, IconCamera, IconFunction, IconGauge, IconLock, IconPause, IconPlay, IconRecord, IconReset, IconRestart, IconSliders, IconStep, IconUnlock } from '../icons';
+
+/** Phones and tablets (touch, no hover) start with the view locked so swipes scroll the page. */
+const isTouchDevice = () => typeof window !== 'undefined' && !!window.matchMedia?.('(hover: none) and (pointer: coarse)').matches;
 
 interface Live { readouts: Readout[]; equations: Equation[]; time: number | null; actions: SimAction[] }
 const EMPTY: Live = { readouts: [], equations: [], time: null, actions: [] };
@@ -24,6 +27,15 @@ export function SimWorkspace({ topic, def }: { topic: Topic; def: SimDefinition 
   const [error, setError] = useState<string | null>(null);
   const experiment = useApp((s) => s.experiment);
   const [flash, setFlash] = useState(false);
+  const [locked, setLocked] = useState(isTouchDevice);
+  const [lockHint, setLockHint] = useState(false);
+  useEffect(() => { ctrl?.engine.setViewLocked(locked); }, [ctrl, locked]);
+  useEffect(() => {
+    if (!locked) { setLockHint(false); return; }
+    setLockHint(true);
+    const id = window.setTimeout(() => setLockHint(false), 3000);
+    return () => window.clearTimeout(id);
+  }, [locked]);
 
   useEffect(() => {
     let c: SimController | null = null;
@@ -113,9 +125,20 @@ export function SimWorkspace({ topic, def }: { topic: Topic; def: SimDefinition 
               <span className="rounded-md border border-warn/40 bg-panel/80 px-2 py-1 font-mono text-xs text-warn backdrop-blur">{state.speed}×</span>
             )}
           </div>
-          <button type="button" onClick={() => ctrl?.engine.resetView()} title={t('resetView')} aria-label={t('resetView')} className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-lg border border-line bg-panel/80 text-fg-2 backdrop-blur hover:text-fg">
-            <IconCamera size={15} />
-          </button>
+          <div className="absolute right-3 top-3 flex gap-1.5">
+            <button type="button" onClick={() => setLocked(!locked)} aria-pressed={locked} title={locked ? t('unlockView') : t('lockView')}
+              aria-label={locked ? t('unlockView') : t('lockView')}
+              className={`flex h-9 items-center gap-1.5 rounded-lg border px-2.5 text-xs font-semibold shadow-panel transition ${locked ? 'border-accent bg-accent text-accent-fg hover:bg-accent-2' : 'border-line-2 bg-panel text-fg hover:border-accent hover:text-accent'}`}>
+              {locked ? <IconLock size={16} /> : <IconUnlock size={16} />}
+              <span>{locked ? 'Locked' : 'Lock'}</span>
+            </button>
+            <button type="button" onClick={() => ctrl?.engine.resetView()} title={t('resetView')} aria-label={t('resetView')}
+              className="flex h-9 items-center gap-1.5 rounded-lg border border-line-2 bg-panel px-2.5 text-xs font-semibold text-fg shadow-panel transition hover:border-accent hover:text-accent">
+              <IconCamera size={16} />
+              <span className="sm:hidden">Reset</span><span className="hidden sm:inline">{t('resetView')}</span>
+            </button>
+          </div>
+          {lockHint && <p className="fade-in pointer-events-none absolute right-3 top-14 rounded-md bg-panel/90 px-2 py-1 text-[11px] text-fg-2 shadow-panel">{t('viewLocked')}</p>}
           {def.hint && <p className="pointer-events-none absolute bottom-16 left-3 right-3 text-center text-[11px] text-fg-3 sm:bottom-[4.25rem]">{def.hint}</p>}
 
           {/* Playback bar */}

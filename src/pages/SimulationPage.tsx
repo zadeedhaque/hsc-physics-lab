@@ -49,7 +49,7 @@ export function SimulationPage() {
   return (
     <div className="flex min-h-full flex-col xl:h-full">
       <header className="flex flex-wrap items-start gap-x-4 gap-y-2 border-b border-line px-4 py-3 md:px-5">
-        <div className="min-w-0 flex-1">
+        <div className="min-w-[min(100%,20rem)] flex-1">
           <nav className="flex flex-wrap items-center gap-1 text-xs text-fg-3" aria-label="Breadcrumb">
             <Link to={`/physics/${p.id}`} className="hover:text-fg">{p.title}</Link>
             <IconChevronRight size={11} />
@@ -69,9 +69,9 @@ export function SimulationPage() {
           <p className="text-sm text-fg-2">{topic.summary}</p>
         </div>
         {ready && (
-          <div className="flex items-center gap-2 self-center text-xs">
-            {prev && <Link to={topicPath(prev)} className="max-w-[12rem] truncate rounded-lg border border-line px-2.5 py-1.5 text-fg-2 hover:bg-panel-2 hover:text-fg" title={prev.title}>← {prev.title}</Link>}
-            {next && <Link to={topicPath(next)} className="max-w-[12rem] truncate rounded-lg border border-line px-2.5 py-1.5 text-fg-2 hover:bg-panel-2 hover:text-fg" title={next.title}>{next.title} →</Link>}
+          <div className="flex w-full items-center gap-2 self-center text-xs sm:w-auto">
+            {prev && <Link to={topicPath(prev)} className="min-w-0 flex-1 truncate sm:max-w-[12rem] sm:flex-none rounded-lg border border-line px-2.5 py-1.5 text-fg-2 hover:bg-panel-2 hover:text-fg" title={prev.title}>← {prev.title}</Link>}
+            {next && <Link to={topicPath(next)} className="min-w-0 flex-1 truncate text-right sm:max-w-[12rem] sm:flex-none sm:text-left rounded-lg border border-line px-2.5 py-1.5 text-fg-2 hover:bg-panel-2 hover:text-fg" title={next.title}>{next.title} →</Link>}
           </div>
         )}
       </header>

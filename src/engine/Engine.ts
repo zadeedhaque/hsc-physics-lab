@@ -84,6 +84,12 @@ export class Engine {
     this.raf = requestAnimationFrame(this.loop);
   }
 
+  /** Freeze the camera (no rotate / pan / zoom). While locked, touch drags scroll the page instead. */
+  setViewLocked(locked: boolean) {
+    this.controls.enabled = !locked;
+    this.renderer.domElement.style.touchAction = locked ? 'pan-x pan-y pinch-zoom' : 'none';
+  }
+
   resetView() {
     const c = this.camSpec;
     this.camera.position.set(...c.position);
