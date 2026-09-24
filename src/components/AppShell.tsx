@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { SearchBox } from './SearchBox';
 import { Sidebar } from './Sidebar';
-import { IconAtom, IconFlask, IconMenu, IconMoon, IconSun, IconX } from './icons';
+import { IconAtom, IconFlask, IconHome, IconMenu, IconMoon, IconSidebar, IconSun, IconX } from './icons';
 import { actions, useApp } from '../state/store';
 import { t } from '../content/strings';
 
 export function AppShell() {
   const theme = useApp((s) => s.theme);
   const experiment = useApp((s) => s.experiment);
+  const sidebar = useApp((s) => s.sidebar);
   const [drawer, setDrawer] = useState(false);
   const loc = useLocation();
 
@@ -27,11 +28,24 @@ export function AppShell() {
         <button type="button" className="rounded-lg p-2 text-fg-2 hover:bg-panel-2 hover:text-fg lg:hidden" aria-label={t('menu')} onClick={() => setDrawer(true)}>
           <IconMenu size={18} />
         </button>
+        <button type="button" onClick={actions.toggleSidebar} aria-expanded={sidebar} aria-controls="syllabus-sidebar"
+          aria-label={sidebar ? t('hideSidebar') : t('showSidebar')} title={sidebar ? t('hideSidebar') : t('showSidebar')}
+          className={`hidden h-9 w-9 place-items-center rounded-lg border transition lg:grid ${sidebar ? 'border-line text-fg-2 hover:bg-panel-2 hover:text-fg' : 'border-accent/40 bg-accent-soft text-accent hover:bg-accent-soft'}`}>
+          <IconSidebar size={17} />
+        </button>
         <Link to="/" className="flex shrink-0 items-center gap-2 font-semibold tracking-tight text-fg">
           <span className="grid h-7 w-7 place-items-center rounded-lg bg-accent-soft text-accent"><IconAtom size={17} /></span>
           <span className="brand-text hidden text-[17px] sm:inline">{t('appName')}</span>
           <span className="hidden rounded-md border border-line px-1.5 py-0.5 font-mono text-[10px] font-medium text-fg-3 md:inline">HSC</span>
         </Link>
+        {!sidebar && (
+          <nav aria-label="Main" className="hidden lg:block">
+            <Link to="/" aria-current={loc.pathname === '/' ? 'page' : undefined}
+              className={`flex h-9 items-center gap-1.5 rounded-lg px-3 text-sm font-medium transition ${loc.pathname === '/' ? 'bg-accent-soft text-accent' : 'text-fg-2 hover:bg-panel-2 hover:text-fg'}`}>
+              <IconHome size={16} /> {t('home')}
+            </Link>
+          </nav>
+        )}
         <div className="flex min-w-0 flex-1 justify-center px-1">
           <SearchBox />
         </div>
@@ -51,8 +65,11 @@ export function AppShell() {
       </header>
 
       <div className="flex min-h-0 flex-1">
-        <aside className="hidden w-72 shrink-0 overflow-y-auto border-r border-line bg-bg lg:block" aria-label="Syllabus">
-          <Sidebar />
+        <aside id="syllabus-sidebar" aria-label="Syllabus" inert={!sidebar}
+          className={`hidden shrink-0 overflow-x-hidden bg-bg transition-[width] duration-200 ease-out lg:block ${sidebar ? 'w-72 overflow-y-auto border-r border-line' : 'w-0 overflow-y-hidden'}`}>
+          <div className="w-72">
+            <Sidebar />
+          </div>
         </aside>
 
         {drawer && (

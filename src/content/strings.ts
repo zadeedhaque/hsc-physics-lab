@@ -37,6 +37,8 @@ const en = {
   step: 'Step',
   speed: 'Speed',
   resetView: 'Reset view',
+  hideSidebar: 'Hide sidebar',
+  showSidebar: 'Show sidebar',
   lockView: 'Lock view',
   unlockView: 'Unlock view',
   viewLocked: 'View locked — drag scrolls the page',

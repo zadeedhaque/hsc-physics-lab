@@ -9,6 +9,8 @@ interface AppState {
   recents: string[];
   theme: 'dark' | 'light';
   experiment: boolean;
+  /** Desktop syllabus sidebar expanded. */
+  sidebar: boolean;
   trials: Record<string, TrialTable>;
 }
 
@@ -16,7 +18,7 @@ const KEY = 'physics-lab:v1';
 
 function load(): AppState {
   const prefersLight = typeof window !== 'undefined' && window.matchMedia?.('(prefers-color-scheme: light)').matches;
-  const base: AppState = { favorites: [], recents: [], theme: prefersLight ? 'light' : 'dark', experiment: false, trials: {} };
+  const base: AppState = { favorites: [], recents: [], theme: prefersLight ? 'light' : 'dark', experiment: false, sidebar: true, trials: {} };
   try {
     const raw = localStorage.getItem(KEY);
     if (!raw) return base;
@@ -26,6 +28,7 @@ function load(): AppState {
       recents: Array.isArray(parsed.recents) ? parsed.recents.filter((x) => typeof x === 'string') : [],
       theme: parsed.theme === 'light' || parsed.theme === 'dark' ? parsed.theme : base.theme,
       experiment: parsed.experiment === true,
+      sidebar: parsed.sidebar !== false,
       trials: parsed.trials && typeof parsed.trials === 'object' ? parsed.trials : {},
     };
   } catch {
@@ -58,6 +61,7 @@ export const actions = {
   setTheme(theme: 'dark' | 'light') { set({ theme }); },
   toggleTheme() { set({ theme: state.theme === 'dark' ? 'light' : 'dark' }); },
   setExperiment(on: boolean) { set({ experiment: on }); },
+  toggleSidebar() { set({ sidebar: !state.sidebar }); },
   addTrial(simId: string, values: Record<string, number | string>) {
     const prev = state.trials[simId] ?? { columns: [], rows: [] };
     const columns = [...prev.columns];
