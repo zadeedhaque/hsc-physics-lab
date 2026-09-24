@@ -29,7 +29,7 @@ export function AppShell() {
         </button>
         <Link to="/" className="flex shrink-0 items-center gap-2 font-semibold tracking-tight text-fg">
           <span className="grid h-7 w-7 place-items-center rounded-lg bg-accent-soft text-accent"><IconAtom size={17} /></span>
-          <span className="hidden sm:inline">{t('appName')}</span>
+          <span className="brand-text hidden font-display text-[15px] font-bold sm:inline">{t('appName')}</span>
           <span className="hidden rounded-md border border-line px-1.5 py-0.5 font-mono text-[10px] font-medium text-fg-3 md:inline">HSC</span>
         </Link>
         <div className="flex min-w-0 flex-1 justify-center px-1">
