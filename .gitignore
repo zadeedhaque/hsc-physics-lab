@@ -1,0 +1,9 @@
+node_modules
+dist
+*.log
+simdbg.txt
+
+tsconfig.tsbuildinfo
+.claude/
+# duplicate copy left over from moving the project
+physics-lab/

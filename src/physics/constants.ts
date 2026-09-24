@@ -1,0 +1,26 @@
+/** Central physical constants (SI units, CODATA 2018 exact/recommended values). */
+export const g = 9.80665; // m/s²  standard gravity
+export const c = 299_792_458; // m/s   speed of light
+export const h = 6.626_070_15e-34; // J·s  Planck constant
+export const hbar = h / (2 * Math.PI);
+export const e = 1.602_176_634e-19; // C    elementary charge
+export const k = 8.987_551_7923e9; // N·m²/C²  Coulomb constant
+export const eps0 = 8.854_187_8128e-12; // F/m  vacuum permittivity
+export const mu0 = 1.256_637_062_12e-6; // N/A²  vacuum permeability
+export const G = 6.674_30e-11; // N·m²/kg²
+export const me = 9.109_383_7015e-31; // kg   electron mass
+export const mp = 1.672_621_923_69e-27; // kg  proton mass
+export const u = 1.660_539_066_60e-27; // kg   atomic mass unit
+export const kB = 1.380_649e-23; // J/K  Boltzmann constant
+export const NA = 6.022_140_76e23; // 1/mol Avogadro
+export const R = 8.314_462_618; // J/(mol·K) gas constant
+export const sigmaSB = 5.670_374_419e-8; // W/(m²·K⁴) Stefan–Boltzmann
+export const wienB = 2.897_771_955e-3; // m·K  Wien displacement
+export const eV = e; // J per eV
+export const RH = 1.097_373_156_8e7; // 1/m Rydberg constant
+export const MeVperU = 931.494_102_42; // MeV/c² per u
+export const Msun = 1.989e30; // kg
+export const Mearth = 5.972e24; // kg
+export const Rearth = 6.371e6; // m
+export const AU = 1.495_978_707e11; // m
+export const atm = 101_325; // Pa
