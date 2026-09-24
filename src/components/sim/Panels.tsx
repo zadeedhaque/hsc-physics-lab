@@ -5,12 +5,12 @@ import { t } from '../../content/strings';
 import { IconChevronDown } from '../icons';
 import { MathText } from './MathText';
 
-export function Section({ title, icon, children, defaultOpen = true, right }: { title: string; icon?: ReactNode; children: ReactNode; defaultOpen?: boolean; right?: ReactNode }) {
+export function Section({ title, icon, children, defaultOpen = true, right, highlight = false }: { title: string; icon?: ReactNode; children: ReactNode; defaultOpen?: boolean; right?: ReactNode; highlight?: boolean }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <section className="border-b border-line px-4 py-3.5 last:border-b-0">
+    <section className={highlight ? 'param-card m-3 rounded-xl px-4 py-3.5' : 'border-b border-line px-4 py-3.5 last:border-b-0'}>
       <div className="flex items-center gap-2">
-        <button type="button" onClick={() => setOpen(!open)} aria-expanded={open} className="flex flex-1 items-center gap-2 text-left text-[11px] font-semibold uppercase tracking-wider text-fg-3 hover:text-fg">
+        <button type="button" onClick={() => setOpen(!open)} aria-expanded={open} className={`flex flex-1 items-center gap-2 text-left uppercase tracking-wider hover:text-fg ${highlight ? 'text-[12px] font-bold text-accent' : 'text-[11px] font-semibold text-fg-3'}`}>
           {icon}{title}
           <IconChevronDown size={13} className={`ml-auto transition-transform ${open ? '' : '-rotate-90'}`} />
         </button>

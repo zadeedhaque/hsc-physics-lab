@@ -166,7 +166,7 @@ export function SimWorkspace({ topic, def }: { topic: Topic; def: SimDefinition 
       <aside className="border-t border-line bg-panel xl:w-[370px] xl:shrink-0 xl:overflow-y-auto xl:border-l xl:border-t-0" aria-label="Simulation controls">
         {state && (
           <>
-            <Section title={t('parameters')} icon={<IconSliders size={13} />}>
+            <Section title={t('parameters')} icon={<IconSliders size={14} />} highlight>
               {def.presets && def.presets.length > 0 && (
                 <div className="mb-4">
                   <p className="mb-1.5 text-[11px] font-medium text-fg-3">{t('presets')}</p>

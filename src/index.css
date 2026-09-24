@@ -26,6 +26,12 @@
   --viewport-b: #0a111e;
   --shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 10px 28px -14px rgba(0, 0, 0, 0.6);
   --label-bg: rgba(12, 20, 34, 0.82);
+  --param-bg: #172a4d;
+  --param-line: rgba(91, 141, 239, 0.38);
+  --param-fg: #ffffff;
+  --param-fg-3: #b9c8e2;
+  --param-inset: #1f3560;
+  --param-inset-2: #0f1e3a;
   color-scheme: dark;
 }
 
@@ -51,6 +57,12 @@
   --viewport-b: #dde5f0;
   --shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 8px 24px -14px rgba(15, 23, 42, 0.2);
   --label-bg: rgba(255, 255, 255, 0.9);
+  --param-bg: #e7eefc;
+  --param-line: rgba(31, 79, 209, 0.28);
+  --param-fg: #06122a;
+  --param-fg-3: #33476b;
+  --param-inset: #ffffff;
+  --param-inset-2: #d3def5;
   color-scheme: light;
 }
 
@@ -212,6 +224,25 @@ input[type='number']::-webkit-inner-spin-button {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Parameters card: tinted, with high-contrast text (tokens are re-scoped inside the card) */
+.param-card {
+  background: var(--param-bg);
+  border: 1px solid var(--param-line);
+  border-left: 4px solid var(--accent);
+  box-shadow: var(--shadow);
+  --fg: var(--param-fg);
+  --fg-2: var(--param-fg);
+  --fg-3: var(--param-fg-3);
+  --line: var(--param-line);
+  --line-2: var(--param-line);
+  --panel: var(--param-inset);
+  --panel-2: var(--param-inset);
+  --panel-3: var(--param-inset-2);
+}
+.param-card label {
+  font-weight: 600;
 }
 
 /* Stacked fractions in the equations panel */
