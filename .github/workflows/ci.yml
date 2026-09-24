@@ -1,0 +1,26 @@
+name: CI
+
+# Type-checks, tests and builds every push and pull request.
+# Deployment is handled by Vercel (see vercel.json), which runs the same tests before going live.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx tsc -p . --noEmit
+      - run: npx vitest run
+      - run: npm run build
