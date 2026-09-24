@@ -140,7 +140,6 @@ export function SimWorkspace({ topic, def }: { topic: Topic; def: SimDefinition 
             </button>
           </div>
           {lockHint && <p className="fade-in pointer-events-none absolute right-3 top-14 rounded-md bg-panel/90 px-2 py-1 text-[11px] text-fg-2 shadow-panel">{t('viewLocked')}</p>}
-          {def.hint && <p className="pointer-events-none absolute bottom-16 left-3 right-3 text-center text-[11px] text-fg-3 sm:bottom-[4.25rem]">{def.hint}</p>}
 
           {/* Playback bar */}
           {state && !def.timeless && (
@@ -175,6 +174,7 @@ export function SimWorkspace({ topic, def }: { topic: Topic; def: SimDefinition 
             </div>
           )}
         </div>
+        {def.hint && <p className="-mt-1 px-1 text-[13px] leading-relaxed text-fg-3"><span className="font-semibold text-fg-2">Tip:</span> {def.hint}</p>}
 
         {graphs.length > 0 && (
           <div className={`grid gap-3 ${graphs.length > 1 ? 'lg:grid-cols-2' : ''}`}>
