@@ -31,8 +31,8 @@ export function SimulationPage() {
   }, [topic, valid]);
 
   useEffect(() => {
-    if (topic) document.title = `${topic.title} — Physics Lab`;
-    return () => { document.title = 'Physics Lab — HSC'; };
+    if (topic) document.title = `${topic.title} — Zadeed's Physics Lab`;
+    return () => { document.title = "Zadeed's Physics Lab — HSC"; };
   }, [topic]);
 
   if (!topic || !valid) return <NotFound />;

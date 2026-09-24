@@ -3,7 +3,7 @@
  * can be added later (fill `bn`, then switch `lang`).
  */
 const en = {
-  appName: 'Physics Lab',
+  appName: "Zadeed's Physics Lab",
   appTagline: 'Explore Physics. Change the Variables. See the Laws.',
   appIntro: 'An interactive 3D laboratory for Bangladesh HSC Physics. Pick a topic, move the sliders, and watch the physics respond — every number on screen is computed from the real equations.',
   searchPlaceholder: 'Search simulations — “projectile”, “Kirchhoff”, “lens”…',
