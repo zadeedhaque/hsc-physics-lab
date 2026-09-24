@@ -85,7 +85,7 @@
   --color-warn: var(--warn);
   --color-bad: var(--bad);
   --font-sans: 'Space Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-display: 'Sora', 'Space Grotesk', ui-sans-serif, sans-serif;
+  --font-display: 'Exo 2', 'Space Grotesk', ui-sans-serif, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
   --shadow-panel: var(--shadow);
 }
@@ -119,7 +119,8 @@ body {
 h1,
 .brand-text {
   font-family: var(--font-display);
-  letter-spacing: -0.02em;
+  font-weight: 800;
+  letter-spacing: 0;
   background: linear-gradient(90deg, var(--accent), var(--neon-3), var(--neon-2), var(--accent));
   background-size: 300% 100%;
   -webkit-background-clip: text;
