@@ -26,7 +26,7 @@ export function HomePage() {
         <HeroOrbits />
         <div className="relative max-w-2xl">
           <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-accent">HSC · Class 11–12</p>
-          <h1 className="text-4xl font-bold tracking-tight text-fg md:text-6xl">PHYSICS LAB</h1>
+          <h1 className="text-4xl font-bold uppercase tracking-tight text-fg md:text-6xl">{t('appName')}</h1>
           <p className="mt-3 text-lg font-medium text-fg md:text-xl">{t('appTagline')}</p>
           <p className="mt-3 max-w-xl text-sm leading-relaxed text-fg-2 md:text-base">{t('appIntro')}</p>
           <div className="mt-6 flex flex-wrap gap-2">
