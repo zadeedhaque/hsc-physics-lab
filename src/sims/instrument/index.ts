@@ -234,7 +234,7 @@ const sim: SimDefinition = {
           { expr: 'LC = pitch / number of circular divisions', sub: `LC = ${str(p, 'pitch')} / ${str(p, 'cd')} = ${n(sr.lc)} mm` },
           { expr: 'Reading = LSR + CSR × LC', sub: `= ${n(sr.lsr)} + ${sr.csr} × ${n(sr.lc)} = ${n(sr.raw)} mm` },
           { expr: 'Corrected = Reading − zero error', sub: `= ${n(sr.raw)} − (${n(ze)}) = ${n(sr.corrected)} mm` },
-          { expr: '% error = |measured − true| / true × 100' },
+          { expr: '% error = (|measured − true| / true) × 100' },
         ];
       },
     };

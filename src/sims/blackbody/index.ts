@@ -140,7 +140,7 @@ const sim: SimDefinition = {
         return [
           { expr: 'λ_max T = b', sub: `λ_max = 2.898×10⁻³ / ${n(t)} = ${n(wienPeak(t) * 1e9)} nm` },
           { expr: 'P / A = σ T⁴', sub: `= 5.67×10⁻⁸ × ${n(t)}⁴ = ${n(sigmaSB * t ** 4)} W/m²` },
-          { expr: 'B(λ, T) = (2hc²/λ⁵) · 1 / (e^{hc/λkT} − 1)', note: 'Planck’s law' },
+          { expr: 'B(λ, T) = 2hc² / (λ⁵ (e^{hc/λkT} − 1))', note: 'Planck’s law' },
         ];
       },
     };

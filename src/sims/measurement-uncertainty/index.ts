@@ -176,7 +176,7 @@ const sim: SimDefinition = {
           { expr: 'x̄ = (x₁ + x₂ + … + xₙ) / n', sub: `x̄ = ${n(s.mean, 5)} cm  (n = ${s.k})` },
           { expr: 'σ = √[ Σ(xᵢ − x̄)² / (n − 1) ]', sub: `σ = ${n(s.sd)} cm` },
           { expr: 'Standard error = σ / √n', sub: `= ${n(s.se)} cm` },
-          { expr: '% error = |x̄ − x_true| / x_true × 100' },
+          { expr: '% error = (|x̄ − x_true| / x_true) × 100' },
         ];
       },
     };

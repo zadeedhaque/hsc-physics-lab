@@ -12,6 +12,7 @@ import { GraphHub } from '../engine/graph';
 import { defaults, sanitize, type Params, type ParamSpec, type ParamValue, type SimDefinition } from './types';
 import { TOPICS, moduleOf } from '../content/catalog';
 import { rng } from '../lib/num';
+import { flattenMath, parseMath } from '../lib/mathText';
 
 const modules = import.meta.glob<{ default: SimDefinition }>('./*/index.ts', { eager: true });
 
@@ -65,6 +66,8 @@ function check(where: string, def: SimDefinition, rt: ReturnType<SimDefinition['
   }
   const labels = rt.readouts().map((r) => r.label);
   expect(new Set(labels).size, `${where}: duplicate readout labels ${labels.join(' | ')}`).toBe(labels.length);
+  // formulas must survive the fraction formatter unchanged (only their layout changes)
+  for (const e of rt.equations()) for (const text of [e.expr, e.sub ?? '']) expect(flattenMath(parseMath(text)), `${where}: ${text}`).toBe(text);
   const exprs = rt.equations().map((e) => e.expr);
   expect(new Set(exprs).size, `${where}: duplicate equations`).toBe(exprs.length);
   const t = rt.time?.();

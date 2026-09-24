@@ -101,7 +101,7 @@ const sim: SimDefinition = {
       equations(): Equation[] {
         return [
           { expr: 'F = η A (dv/dx)', sub: `= ${n(fluid().eta)} × ${n(num(p, 'A'))} × ${n(num(p, 'v'))} / ${n(num(p, 'd') / 1000)} = ${n(force())} N` },
-          { expr: 'η = F / (A · dv/dx)   unit: N·s/m² = Pa·s' },
+          { expr: 'η = F / (A · dv/dx)', note: 'Unit: N·s/m² = Pa·s' },
         ];
       },
     };

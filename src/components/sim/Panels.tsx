@@ -3,6 +3,7 @@ import type { Equation, Learn, Readout } from '../../sims/types';
 import { fmt } from '../../lib/num';
 import { t } from '../../content/strings';
 import { IconChevronDown } from '../icons';
+import { MathText } from './MathText';
 
 export function Section({ title, icon, children, defaultOpen = true, right }: { title: string; icon?: ReactNode; children: ReactNode; defaultOpen?: boolean; right?: ReactNode }) {
   const [open, setOpen] = useState(defaultOpen);
@@ -47,8 +48,8 @@ export function EquationList({ equations }: { equations: Equation[] }) {
     <ul className="space-y-2">
       {equations.map((eq, i) => (
         <li key={i} className="rounded-lg border border-line bg-panel-2 px-3 py-2">
-          <p className="font-mono text-[14px] text-fg">{eq.expr}</p>
-          {eq.sub && <p className="mt-0.5 break-words font-mono text-[12px] text-accent">{eq.sub}</p>}
+          <p className="math font-mono text-[14px] text-fg"><MathText text={eq.expr} /></p>
+          {eq.sub && <p className="math mt-1 break-words font-mono text-[12px] text-accent"><MathText text={eq.sub} /></p>}
           {eq.note && <p className="mt-0.5 text-[11px] text-fg-3">{eq.note}</p>}
         </li>
       ))}
