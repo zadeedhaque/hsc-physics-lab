@@ -25,9 +25,9 @@ export function HomePage() {
       <section className="relative overflow-hidden rounded-2xl border border-line bg-panel px-6 py-10 md:px-10 md:py-14">
         <HeroOrbits />
         <div className="relative max-w-2xl">
-          <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-accent">HSC · Class 11–12</p>
-          <h1 className="text-4xl font-bold uppercase tracking-tight text-fg md:text-6xl">{t('appName')}</h1>
-          <p className="mt-3 text-lg font-medium text-fg md:text-xl">{t('appTagline')}</p>
+          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-accent">HSC Physics · Class 11–12</p>
+          <h1 className="text-4xl leading-tight text-fg md:text-5xl">{t('appName')}</h1>
+          <p className="mt-4 text-lg text-fg-2 md:text-xl">{t('appTagline')}</p>
           <p className="mt-3 max-w-xl text-sm leading-relaxed text-fg-2 md:text-base">{t('appIntro')}</p>
           <div className="mt-6 flex flex-wrap gap-2">
             {last ? (
@@ -61,11 +61,8 @@ export function HomePage() {
               <dl className="mt-5 flex gap-6">
                 <Stat label={t('chapters')} value={chaptersOf(p.id).length} />
                 <Stat label="Topics" value={topics.length} />
-                <Stat label="Interactive now" value={ready} accent />
+                <Stat label="Simulations" value={ready} />
               </dl>
-              <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-panel-3" role="progressbar" aria-valuenow={ready} aria-valuemax={topics.length} aria-label={`${ready} of ${topics.length} topics interactive`}>
-                <div className="h-full rounded-full bg-accent" style={{ width: `${(ready / topics.length) * 100}%` }} />
-              </div>
             </Link>
           );
         })}
@@ -90,11 +87,11 @@ export function HomePage() {
   );
 }
 
-function Stat({ label, value, accent }: { label: string; value: number; accent?: boolean }) {
+function Stat({ label, value }: { label: string; value: number }) {
   return (
     <div>
       <dt className="text-[11px] uppercase tracking-wider text-fg-3">{label}</dt>
-      <dd className={`font-mono text-2xl font-semibold ${accent ? 'text-accent' : 'text-fg'}`}>{value}</dd>
+      <dd className="font-display text-2xl font-semibold text-fg">{value}</dd>
     </div>
   );
 }
@@ -111,22 +108,13 @@ function Shelf({ title, icon, children }: { title: string; icon?: React.ReactNod
 /** Decorative orbit lines behind the hero (static; hidden from assistive tech). */
 function HeroOrbits() {
   return (
-    <svg className="pointer-events-none absolute -right-24 -top-16 h-[420px] w-[620px] opacity-60 md:opacity-90" viewBox="0 0 620 420" fill="none" aria-hidden="true">
-      <defs>
-        <radialGradient id="hero-glow" cx="0.5" cy="0.5" r="0.5">
-          <stop offset="0" stopColor="var(--accent)" stopOpacity="0.35" />
-          <stop offset="1" stopColor="var(--accent)" stopOpacity="0" />
-        </radialGradient>
-      </defs>
-      <circle cx="400" cy="200" r="120" fill="url(#hero-glow)" />
-      <circle cx="400" cy="200" r="10" fill="var(--accent)" />
+    <svg className="pointer-events-none absolute -right-24 -top-16 hidden h-[420px] w-[620px] opacity-50 md:block" viewBox="0 0 620 420" fill="none" aria-hidden="true">
+      <circle cx="400" cy="200" r="7" fill="var(--accent)" opacity="0.7" />
       {[60, 110, 170, 240].map((r, i) => (
         <ellipse key={r} cx="400" cy="200" rx={r * 1.35} ry={r * 0.55} stroke="var(--line-2)" transform={`rotate(${-18 + i * 4} 400 200)`} />
       ))}
-      <circle cx="481" cy="186" r="5" fill="#f472b6" />
-      <circle cx="265" cy="238" r="4" fill="#fbbf24" />
-      <circle cx="590" cy="150" r="3.5" fill="#34d399" />
-      <path d="M150 360 Q 300 80 470 330" stroke="var(--accent)" strokeDasharray="4 6" opacity="0.6" />
+      <circle cx="481" cy="186" r="3.5" fill="var(--fg-3)" />
+      <circle cx="265" cy="238" r="3" fill="var(--fg-3)" />
     </svg>
   );
 }
