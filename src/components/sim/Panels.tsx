@@ -1,9 +1,12 @@
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import type { Equation, Learn, Readout } from '../../sims/types';
 import { fmt } from '../../lib/num';
 import { t } from '../../content/strings';
 import { IconChevronDown } from '../icons';
 import { MathText } from './MathText';
+import { actions, useApp } from '../../state/store';
+import { cachedLearnBn, loadLearnBn } from '../../content/learnBn/load';
+import type { LearnBn } from '../../content/learnBn/types';
 
 export function Section({ title, icon, children, defaultOpen = true, right, highlight = false }: { title: string; icon?: ReactNode; children: ReactNode; defaultOpen?: boolean; right?: ReactNode; highlight?: boolean }) {
   const [open, setOpen] = useState(defaultOpen);
@@ -57,20 +60,28 @@ export function EquationList({ equations }: { equations: Equation[] }) {
   );
 }
 
-export function LearnPanel({ learn }: { learn: Learn }) {
+const LEARN_LABELS = {
+  en: { concept: t('concept'), variables: t('variables'), observe: t('observe'), challenge: t('challenge') },
+  bn: { concept: 'ধারণা', variables: 'রাশিসমূহ', observe: 'যা লক্ষ করবে', challenge: 'পরীক্ষণের চ্যালেঞ্জ' },
+};
+
+interface LearnView { concept: string; variables: [string, string][]; observe: string[]; challenge: string }
+
+function LearnBody({ view, lang }: { view: LearnView; lang: 'en' | 'bn' }) {
+  const L = LEARN_LABELS[lang];
   return (
-    <div className="space-y-4 text-sm">
+    <div className="space-y-4 text-sm" lang={lang}>
       <div>
-        <h4 className="mb-1 text-xs font-semibold text-fg">{t('concept')}</h4>
-        <p className="leading-relaxed text-fg-2">{learn.concept}</p>
+        <h4 className="mb-1 text-xs font-semibold text-fg">{L.concept}</h4>
+        <p className="leading-relaxed text-fg-2">{view.concept}</p>
       </div>
-      {learn.variables.length > 0 && (
+      {view.variables.length > 0 && (
         <div>
-          <h4 className="mb-1 text-xs font-semibold text-fg">{t('variables')}</h4>
+          <h4 className="mb-1 text-xs font-semibold text-fg">{L.variables}</h4>
           <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
-            {learn.variables.map(([sym, meaning]) => (
+            {view.variables.map(([sym, meaning]) => (
               <div key={sym} className="contents">
-                <dt className="font-mono text-accent">{sym}</dt>
+                <dt className="font-mono text-accent" lang="en">{sym}</dt>
                 <dd className="text-fg-2">{meaning}</dd>
               </div>
             ))}
@@ -78,15 +89,57 @@ export function LearnPanel({ learn }: { learn: Learn }) {
         </div>
       )}
       <div>
-        <h4 className="mb-1 text-xs font-semibold text-fg">{t('observe')}</h4>
+        <h4 className="mb-1 text-xs font-semibold text-fg">{L.observe}</h4>
         <ul className="list-disc space-y-1 pl-4 text-fg-2 marker:text-fg-3">
-          {learn.observe.map((o) => <li key={o}>{o}</li>)}
+          {view.observe.map((o) => <li key={o}>{o}</li>)}
         </ul>
       </div>
       <div className="rounded-lg border border-accent/30 bg-accent-soft px-3 py-2.5">
-        <h4 className="mb-1 text-xs font-semibold text-accent">{t('challenge')}</h4>
-        <p className="text-fg">{learn.challenge}</p>
+        <h4 className="mb-1 text-xs font-semibold text-accent">{L.challenge}</h4>
+        <p className="text-fg">{view.challenge}</p>
       </div>
+    </div>
+  );
+}
+
+/** Learn panel with English | বাংলা tabs. `bnKey` is the simulation module id used to find the Bangla text. */
+export function LearnPanel({ learn, bnKey }: { learn: Learn; bnKey: string }) {
+  const lang = useApp((s) => s.learnLang);
+  const [bn, setBn] = useState<LearnBn | null | undefined>(() => cachedLearnBn()?.[bnKey]);
+  useEffect(() => {
+    if (lang !== 'bn') return;
+    let alive = true;
+    loadLearnBn().then((m) => { if (alive) setBn(m[bnKey] ?? null); }).catch(() => { if (alive) setBn(null); });
+    return () => { alive = false; };
+  }, [lang, bnKey]);
+
+  const english: LearnView = learn;
+  const bangla: LearnView | null = bn
+    ? { concept: bn.concept, variables: learn.variables.map(([sym], i) => [sym, bn.variables[i] ?? '']), observe: bn.observe, challenge: bn.challenge }
+    : null;
+
+  const tab = (value: 'en' | 'bn', label: string) => (
+    <button type="button" role="tab" aria-selected={lang === value} onClick={() => actions.setLearnLang(value)} lang={value}
+      className={`rounded-md px-3 py-1 text-xs font-semibold transition ${lang === value ? 'bg-panel text-fg shadow-sm' : 'text-fg-3 hover:text-fg'}`}>
+      {label}
+    </button>
+  );
+
+  return (
+    <div>
+      <div role="tablist" aria-label="Language" className="mb-3 inline-flex gap-1 rounded-lg bg-panel-3 p-1">
+        {tab('en', 'English')}
+        {tab('bn', 'বাংলা')}
+      </div>
+      {lang === 'en' && <LearnBody view={english} lang="en" />}
+      {lang === 'bn' && bangla && <LearnBody view={bangla} lang="bn" />}
+      {lang === 'bn' && bn === undefined && <p className="text-sm text-fg-3" lang="bn">লোড হচ্ছে…</p>}
+      {lang === 'bn' && bn === null && (
+        <>
+          <p className="mb-3 rounded-lg border border-line px-3 py-2 text-xs text-fg-2" lang="bn">এই সিমুলেশনের বাংলা অনুবাদ এখনও নেই — ইংরেজি দেখানো হচ্ছে।</p>
+          <LearnBody view={english} lang="en" />
+        </>
+      )}
     </div>
   );
 }

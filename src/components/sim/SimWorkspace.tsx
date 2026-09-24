@@ -8,6 +8,7 @@ import { fmt } from '../../lib/num';
 import { ParamControls } from './ParamControls';
 import { Graph } from './Graph';
 import { EquationList, LearnPanel, ResultsGrid, Section, formatReadout } from './Panels';
+import { moduleOf } from '../../content/catalog';
 import { ExperimentPanel } from './ExperimentPanel';
 import { IconBook, IconCamera, IconFunction, IconGauge, IconLock, IconPause, IconPlay, IconRecord, IconReset, IconRestart, IconSliders, IconStep, IconUnlock } from '../icons';
 
@@ -229,7 +230,7 @@ export function SimWorkspace({ topic, def }: { topic: Topic; def: SimDefinition 
               <EquationList equations={live.equations} />
             </Section>
             <Section title={t('learn')} icon={<IconBook size={13} />} defaultOpen>
-              <LearnPanel learn={def.learn} />
+              <LearnPanel learn={def.learn} bnKey={moduleOf(topic)} />
             </Section>
           </>
         )}

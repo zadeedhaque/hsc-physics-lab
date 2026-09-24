@@ -11,6 +11,8 @@ interface AppState {
   experiment: boolean;
   /** Desktop syllabus sidebar expanded. */
   sidebar: boolean;
+  /** Language of the Learn panel. */
+  learnLang: 'en' | 'bn';
   trials: Record<string, TrialTable>;
 }
 
@@ -18,7 +20,7 @@ const KEY = 'physics-lab:v1';
 
 function load(): AppState {
   const prefersLight = typeof window !== 'undefined' && window.matchMedia?.('(prefers-color-scheme: light)').matches;
-  const base: AppState = { favorites: [], recents: [], theme: prefersLight ? 'light' : 'dark', experiment: false, sidebar: true, trials: {} };
+  const base: AppState = { favorites: [], recents: [], theme: prefersLight ? 'light' : 'dark', experiment: false, sidebar: true, learnLang: 'en', trials: {} };
   try {
     const raw = localStorage.getItem(KEY);
     if (!raw) return base;
@@ -29,6 +31,7 @@ function load(): AppState {
       theme: parsed.theme === 'light' || parsed.theme === 'dark' ? parsed.theme : base.theme,
       experiment: parsed.experiment === true,
       sidebar: parsed.sidebar !== false,
+      learnLang: parsed.learnLang === 'bn' ? 'bn' : 'en',
       trials: parsed.trials && typeof parsed.trials === 'object' ? parsed.trials : {},
     };
   } catch {
@@ -62,6 +65,7 @@ export const actions = {
   toggleTheme() { set({ theme: state.theme === 'dark' ? 'light' : 'dark' }); },
   setExperiment(on: boolean) { set({ experiment: on }); },
   toggleSidebar() { set({ sidebar: !state.sidebar }); },
+  setLearnLang(learnLang: 'en' | 'bn') { set({ learnLang }); },
   addTrial(simId: string, values: Record<string, number | string>) {
     const prev = state.trials[simId] ?? { columns: [], rows: [] };
     const columns = [...prev.columns];

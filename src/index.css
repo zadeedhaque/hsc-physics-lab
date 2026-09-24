@@ -245,6 +245,12 @@ input[type='number']::-webkit-inner-spin-button {
   font-weight: 600;
 }
 
+/* Bangla text (Inter has no Bengali glyphs) */
+:lang(bn) {
+  font-family: 'Hind Siliguri', var(--font-sans);
+  line-height: 1.75;
+}
+
 /* Stacked fractions in the equations panel */
 .math {
   line-height: 2.1;
