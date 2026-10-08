@@ -10,7 +10,8 @@ import { Graph } from './Graph';
 import { EquationList, LearnPanel, ResultsGrid, Section, formatReadout } from './Panels';
 import { moduleOf } from '../../content/catalog';
 import { ExperimentPanel } from './ExperimentPanel';
-import { IconBook, IconCamera, IconFunction, IconGauge, IconLock, IconPause, IconPlay, IconRecord, IconReset, IconRestart, IconSliders, IconStep, IconUnlock } from '../icons';
+import { IconBolt, IconBook, IconCamera, IconFunction, IconGauge, IconLock, IconPause, IconPlay, IconRecord, IconReset, IconRestart, IconSliders, IconStep, IconUnlock } from '../icons';
+import { Notation } from './MathText';
 
 /** Phones and tablets (touch, no hover) start with the view locked so swipes scroll the page. */
 const isTouchDevice = () => typeof window !== 'undefined' && !!window.matchMedia?.('(hover: none) and (pointer: coarse)').matches;
@@ -106,7 +107,8 @@ export function SimWorkspace({ topic, def }: { topic: Topic; def: SimDefinition 
     <div className="flex flex-col xl:h-full xl:flex-row">
       <div className="min-w-0 flex-1 space-y-4 p-3 md:p-4 xl:overflow-y-auto">
         {/* Viewport */}
-        <div className="viewport-bg relative h-[52vh] min-h-[320px] overflow-hidden rounded-2xl border border-line xl:h-[calc(100vh-25rem)] xl:min-h-[400px]">
+        {/* The scene is always drawn on a dark "instrument display": every simulation's colours are tuned for it. */}
+        <div data-theme="dark" className="viewport-bg relative h-[52vh] min-h-[320px] overflow-hidden rounded-2xl border border-line text-fg shadow-panel xl:h-[calc(100vh-25rem)] xl:min-h-[400px]">
           <div ref={hostRef} className="absolute inset-0" />
           {error && (
             <div role="alert" className="absolute inset-0 grid place-items-center p-6 text-center text-sm text-bad">
@@ -174,7 +176,7 @@ export function SimWorkspace({ topic, def }: { topic: Topic; def: SimDefinition 
             </div>
           )}
         </div>
-        {def.hint && <p className="-mt-1 px-1 text-[13px] leading-relaxed text-fg-3"><span className="font-semibold text-fg-2">Tip:</span> {def.hint}</p>}
+        {def.hint && <p className="-mt-1 px-1 text-[13px] leading-relaxed text-fg-3"><span className="font-bold text-fg-2">Tip</span> · <Notation text={def.hint} /></p>}
 
         {graphs.length > 0 && (
           <div className={`grid gap-3 ${graphs.length > 1 ? 'lg:grid-cols-2' : ''}`}>
@@ -183,24 +185,28 @@ export function SimWorkspace({ topic, def }: { topic: Topic; def: SimDefinition 
         )}
 
         {experiment && <ExperimentPanel simId={topic.id} title={topic.title} onRecord={record} />}
-        {!def.timeless && <p className="hidden text-center text-[11px] text-fg-3 md:block">{t('keyboardHint')}</p>}
+        {!def.timeless && (
+          <p className="hidden items-center justify-center gap-4 text-[11.5px] text-fg-3 md:flex" aria-label={t('keyboardHint')}>
+            <span><Kbd>Space</Kbd> play / pause</span><span><Kbd>R</Kbd> reset</span><span><Kbd>→</Kbd> step</span>
+          </p>
+        )}
       </div>
 
       {/* Right panel */}
-      <aside className="border-t border-line bg-panel xl:w-[370px] xl:shrink-0 xl:overflow-y-auto xl:border-l xl:border-t-0" aria-label="Simulation controls">
+      <aside className="border-t border-line bg-panel xl:w-[380px] xl:shrink-0 xl:overflow-y-auto xl:border-l xl:border-t-0" aria-label="Simulation controls">
         {state && (
           <>
             <Section title={t('parameters')} icon={<IconSliders size={14} />} highlight>
               {def.presets && def.presets.length > 0 && (
                 <div className="mb-4">
-                  <p className="mb-1.5 text-[11px] font-medium text-fg-3">{t('presets')}</p>
+                  <p className="label mb-2">{t('presets')}</p>
                   <div className="flex flex-wrap gap-1.5">
                     {def.presets.map((p) => {
                       const active = Object.entries(p.values).every(([k, v]) => state.params[k] === v);
                       return (
                         <button key={p.label} type="button" onClick={() => ctrl?.applyValues(p.values)} aria-pressed={active}
-                          className={`rounded-full border px-2.5 py-1 text-xs font-medium transition ${active ? 'border-accent/50 bg-accent-soft text-accent' : 'border-line text-fg-2 hover:border-line-2 hover:text-fg'}`}>
-                          {p.label}
+                          className={`press rounded-lg border px-2.5 py-1 text-xs font-semibold ${active ? 'border-accent bg-accent text-accent-fg' : 'border-line bg-panel text-fg-2 hover:border-accent/60 hover:text-fg'}`}>
+                          <Notation text={p.label} />
                         </button>
                       );
                     })}
@@ -211,25 +217,25 @@ export function SimWorkspace({ topic, def }: { topic: Topic; def: SimDefinition 
             </Section>
 
             {live.actions.length > 0 && (
-              <Section title={t('simulation')} icon={<IconPlay size={12} />}>
+              <Section title={t('simulation')} icon={<IconBolt size={14} />}>
                 <div className="flex flex-wrap gap-2">
                   {live.actions.map((a) => (
                     <button key={a.id} type="button" onClick={() => { a.run(); if (!def.timeless) ctrl?.play(); }}
-                      className={`rounded-lg px-3.5 py-2 text-sm font-semibold ${a.primary ? 'bg-accent text-accent-fg hover:bg-accent-2' : 'border border-line text-fg hover:bg-panel-2'}`}>
-                      {a.label}
+                      className={`press rounded-lg px-3.5 py-2 text-sm font-bold ${a.primary ? 'bg-accent text-accent-fg hover:bg-accent-2' : 'border border-line-2 text-fg hover:bg-panel-2'}`}>
+                      <Notation text={a.label} />
                     </button>
                   ))}
                 </div>
               </Section>
             )}
 
-            <Section title={t('results')} icon={<IconGauge size={13} />}>
+            <Section title={t('results')} icon={<IconGauge size={14} />}>
               <ResultsGrid readouts={live.readouts} />
             </Section>
-            <Section title={t('equations')} icon={<IconFunction size={13} />}>
+            <Section title={t('equations')} icon={<IconFunction size={14} />}>
               <EquationList equations={live.equations} />
             </Section>
-            <Section title={t('learn')} icon={<IconBook size={13} />} defaultOpen>
+            <Section title={t('learn')} icon={<IconBook size={14} />} defaultOpen>
               <LearnPanel learn={def.learn} bnKey={moduleOf(topic)} />
             </Section>
           </>
@@ -242,8 +248,12 @@ export function SimWorkspace({ topic, def }: { topic: Topic; def: SimDefinition 
 function BarButton({ label, onClick, children, primary }: { label: string; onClick: () => void; children: React.ReactNode; primary?: boolean }) {
   return (
     <button type="button" onClick={onClick} aria-label={label} title={label}
-      className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg transition ${primary ? 'bg-accent text-accent-fg hover:bg-accent-2' : 'text-fg-2 hover:bg-panel-3 hover:text-fg'}`}>
+      className={`press grid h-8 w-8 shrink-0 place-items-center rounded-lg ${primary ? 'bg-accent text-accent-fg hover:bg-accent-2' : 'text-fg-2 hover:bg-panel-3 hover:text-fg'}`}>
       {children}
     </button>
   );
+}
+
+function Kbd({ children }: { children: React.ReactNode }) {
+  return <kbd className="mr-1 rounded-md border border-line-2 bg-panel px-1.5 py-0.5 font-mono text-[10.5px] font-medium text-fg-2 shadow-[0_1px_0_var(--line-2)]">{children}</kbd>;
 }

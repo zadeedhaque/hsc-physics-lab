@@ -4,9 +4,10 @@
  */
 const en = {
   appName: "Zadeed's Physics Lab",
-  appTagline: 'Explore Physics. Change the Variables. See the Laws.',
+  appTagline: 'Explore physics. Change the variables. See the laws.',
   appIntro: 'An interactive 3D laboratory for Bangladesh HSC Physics. Pick a topic, move the sliders, and watch the physics respond — every number on screen is computed from the real equations.',
   searchPlaceholder: 'Search simulations — “projectile”, “Kirchhoff”, “lens”…',
+  searchShort: 'Search simulations',
   searchEmpty: 'No simulations match',
   home: 'Home',
   chapters: 'Chapters',
@@ -14,6 +15,7 @@ const en = {
   simulations: 'simulations',
   ready: 'ready',
   inDevelopment: 'In development',
+  soon: 'Soon',
   openSimulation: 'Open simulation',
   favorites: 'Favorites',
   recents: 'Recently used',

@@ -129,7 +129,7 @@ const sim: SimDefinition = {
         const m = num(p, 'm'), F = num(p, 'F');
         return [
           { expr: 'N = mg', sub: `N = ${n(m)} × ${n(num(p, 'g'))} = ${n(r.N)} N` },
-          { expr: 'f_s ≤ μs N', sub: `f_s,max = ${n(num(p, 'muS'))} × ${n(r.N)} = ${n(r.fsMax)} N` },
+          { expr: 'f_s ≤ μs N', sub: `f_{s,max} = ${n(num(p, 'muS'))} × ${n(r.N)} = ${n(r.fsMax)} N` },
           { expr: 'f_k = μk N', sub: `f_k = ${n(num(p, 'muK'))} × ${n(r.N)} = ${n(r.fk)} N` },
           { expr: 'a = (F − f) / m', sub: r.sliding ? `a = (${n(F)} − ${n(Math.abs(r.friction))}) / ${n(m)} = ${n(r.a)} m/s²` : `F ≤ μsN → a = 0` },
         ];

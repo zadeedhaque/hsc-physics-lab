@@ -69,7 +69,7 @@ const sim: SimDefinition = {
     const bank2 = kit.box(40, 0.4, 2, '#3f6212');
     const boat = kit.box(0.5, 0.35, 1.1, '#f8fafc');
     const path = kit.trail(C.weight, 800, { width: 2.5 });
-    const aw = kit.arrow(C.velocity, { label: 'v_boat/water' });
+    const aw = kit.arrow(C.velocity, { label: 'v_{boat/water}' });
     const ar = kit.arrow('#60a5fa', { label: 'v_river' });
     const ag = kit.arrow(C.resultant, { label: 'v_ground' });
     const flow = kit.segments('#93c5fd', { width: 1.2, opacity: 0.6 });
@@ -179,7 +179,7 @@ const sim: SimDefinition = {
         }
         const v = boatVel();
         return [
-          { expr: 'v_ground = v_boat/water + v_river  (vector sum)', sub: `|v| = ${n(Math.hypot(v.vx, v.vz))} m/s` },
+          { expr: 'v_ground = v_{boat/water} + v_river  (vector sum)', sub: `|v| = ${n(Math.hypot(v.vx, v.vz))} m/s` },
           { expr: 't = W / (v_b cos θ)', sub: v.vz > 0 ? `t = ${n(num(p, 'W'))} / ${n(v.vz)} = ${n(num(p, 'W') / v.vz)} s` : '—' },
           { expr: 'Zero drift: sin θ = v_r / v_b' },
         ];

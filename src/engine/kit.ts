@@ -7,6 +7,7 @@ import { LineSegments2 } from 'three/examples/jsm/lines/LineSegments2.js';
 import { LineSegmentsGeometry } from 'three/examples/jsm/lines/LineSegmentsGeometry.js';
 import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { C } from './colors';
+import { renderNotationInto } from '../lib/notation';
 
 export type V3 = THREE.Vector3 | [number, number, number];
 export const v3 = (p: V3) => (Array.isArray(p) ? new THREE.Vector3(p[0], p[1], p[2]) : p);
@@ -79,7 +80,7 @@ export class Label extends CSS2DObject {
     this.setText(text);
   }
   setText(t: string) {
-    if (t !== this.text) { this.text = t; this.element.textContent = t; }
+    if (t !== this.text) { this.text = t; renderNotationInto(this.element, t); }
     return this;
   }
   setColor(color: string) { this.element.style.setProperty('--label-color', color); return this; }

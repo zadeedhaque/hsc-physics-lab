@@ -39,3 +39,6 @@ export const IconClock = (p: P) => <svg {...base(p)}><circle cx="12" cy="12" r="
 export const IconAtom = (p: P) => (
   <svg {...base(p)}><circle cx="12" cy="12" r="1.6" fill="currentColor" /><ellipse cx="12" cy="12" rx="10" ry="4" /><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)" /><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)" /></svg>
 );
+export const IconBolt = (p: P) => <svg {...base(p)}><path d="M13 3 5 13.5h6L10 21l8-10.5h-6z" /></svg>;
+export const IconArrowRight = (p: P) => <svg {...base(p)}><path d="M5 12h14M13 6l6 6-6 6" /></svg>;
+export const IconArrowLeft = (p: P) => <svg {...base(p)}><path d="M19 12H5M11 6l-6 6 6 6" /></svg>;

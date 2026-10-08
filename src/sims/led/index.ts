@@ -42,7 +42,7 @@ const sim: SimDefinition = {
   camera: { position: [0, 0.5, 12], target: [0, 0, 0], aspect: 1.4 },
   hint: 'Each electron that drops across the band gap gives out one photon of energy ≈ E_g, so a wider gap means bluer light — and a higher switch-on voltage.',
   params: [
-    { kind: 'select', key: 'led', label: 'LED colour', default: 'red', options: Object.entries(LEDS).map(([value, l]) => ({ value, label: `${l.name} — E_g ${l.Eg} eV` })) },
+    { kind: 'select', key: 'led', label: 'LED colour', default: 'red', options: Object.entries(LEDS).map(([value, l]) => ({ value, label: `${l.name} — ${l.Eg} eV band gap` })) },
     { kind: 'slider', key: 'V', label: 'Supply voltage', unit: 'V', min: 0, max: 9, step: 0.05, default: 5 },
     { kind: 'slider', key: 'R', label: 'Series resistor', unit: 'Ω', min: 47, max: 2000, step: 1, default: 220 },
   ],

@@ -1,5 +1,7 @@
 import { useEffect, useId, useState } from 'react';
 import type { ParamSpec, Params, ParamValue, SliderParam } from '../../sims/types';
+import { plainNotation } from '../../lib/notation';
+import { Notation } from './MathText';
 
 export function ParamControls({ specs, params, onChange }: { specs: ParamSpec[]; params: Params; onChange: (k: string, v: ParamValue) => void }) {
   return (
@@ -39,13 +41,13 @@ function Slider({ spec, value, onChange }: { spec: SliderParam; value: number; o
   return (
     <div>
       <div className="mb-1 flex items-baseline justify-between gap-2">
-        <label htmlFor={id} className="text-[13px] font-medium text-fg-2">{spec.label}</label>
+        <label htmlFor={id} className="text-[13px] font-medium text-fg-2"><Notation text={spec.label} /></label>
         <span className="flex items-baseline gap-1">
           <input
-            aria-label={`${spec.label} value`}
+            aria-label={`${plainNotation(spec.label)} value`}
             type="number"
             inputMode="decimal"
-            className="w-[4.75rem] rounded-md border border-transparent bg-transparent px-1 py-0.5 text-right font-mono text-[13px] text-fg hover:border-line focus:border-accent/60 focus:bg-panel-2 focus:outline-none"
+            className="w-[4.75rem] rounded-md border border-transparent bg-transparent px-1 py-0.5 text-right font-mono text-[13px] font-medium text-fg transition hover:border-line focus:border-accent focus:bg-panel-2 focus:outline-none"
             value={draft}
             min={spec.min}
             max={spec.max}
@@ -54,7 +56,7 @@ function Slider({ spec, value, onChange }: { spec: SliderParam; value: number; o
             onBlur={commit}
             onKeyDown={(e) => { if (e.key === 'Enter') { commit(); (e.target as HTMLInputElement).blur(); } }}
           />
-          {spec.unit && <span className="min-w-[1.5rem] font-mono text-xs text-fg-3">{spec.unit}</span>}
+          {spec.unit && <span className="min-w-[1.5rem] font-mono text-xs text-fg-3"><Notation text={spec.unit} /></span>}
         </span>
       </div>
       <input
@@ -66,10 +68,10 @@ function Slider({ spec, value, onChange }: { spec: SliderParam; value: number; o
         step={spec.step}
         value={value}
         style={{ ['--fill' as string]: `${fill}%` }}
-        aria-valuetext={`${value.toFixed(dec)} ${spec.unit ?? ''}`}
+        aria-valuetext={`${value.toFixed(dec)} ${plainNotation(spec.unit ?? '')}`}
         onChange={(e) => onChange(parseFloat(e.target.value))}
       />
-      {spec.hint && <p className="mt-0.5 text-[11px] text-fg-3">{spec.hint}</p>}
+      {spec.hint && <p className="mt-0.5 text-[11.5px] text-fg-3"><Notation text={spec.hint} /></p>}
     </div>
   );
 }
@@ -79,8 +81,8 @@ function Toggle({ label, hint, value, onChange }: { label: string; hint?: string
   return (
     <div className="flex items-center justify-between gap-3">
       <div>
-        <label htmlFor={id} className="text-[13px] font-medium text-fg-2">{label}</label>
-        {hint && <p className="text-[11px] text-fg-3">{hint}</p>}
+        <label htmlFor={id} className="text-[13px] font-medium text-fg-2"><Notation text={label} /></label>
+        {hint && <p className="text-[11.5px] text-fg-3"><Notation text={hint} /></p>}
       </div>
       <button
         id={id}
@@ -88,9 +90,9 @@ function Toggle({ label, hint, value, onChange }: { label: string; hint?: string
         role="switch"
         aria-checked={value}
         onClick={() => onChange(!value)}
-        className={`relative h-5 w-9 shrink-0 rounded-full transition ${value ? 'bg-accent' : 'bg-line-2'}`}
+        className={`relative h-[22px] w-10 shrink-0 rounded-full transition-colors ${value ? 'bg-accent' : 'bg-line-2'}`}
       >
-        <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-all ${value ? 'left-[18px]' : 'left-0.5'}`} />
+        <span className={`absolute left-[3px] top-[3px] h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-200 ${value ? 'translate-x-[18px]' : ''}`} />
       </button>
     </div>
   );
@@ -102,7 +104,7 @@ function Select({ label, hint, value, options, onChange }: { label: string; hint
   const segmented = options.length <= 4 && options.every((o) => o.label.length <= 12);
   return (
     <div>
-      <label htmlFor={segmented ? undefined : id} id={`${id}-l`} className="mb-1.5 block text-[13px] font-medium text-fg-2">{label}</label>
+      <label htmlFor={segmented ? undefined : id} id={`${id}-l`} className="mb-1.5 block text-[13px] font-medium text-fg-2"><Notation text={label} /></label>
       {segmented ? (
         <div role="radiogroup" aria-labelledby={`${id}-l`} className="grid gap-1 rounded-lg bg-panel-3 p-1" style={{ gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))` }}>
           {options.map((o) => (
@@ -112,18 +114,18 @@ function Select({ label, hint, value, options, onChange }: { label: string; hint
               role="radio"
               aria-checked={o.value === value}
               onClick={() => onChange(o.value)}
-              className={`truncate rounded-md px-2 py-1 text-xs font-medium transition ${o.value === value ? 'bg-panel text-fg shadow-sm' : 'text-fg-3 hover:text-fg'}`}
+              className={`press truncate rounded-md px-2 py-1 text-xs font-semibold ${o.value === value ? 'bg-panel text-fg shadow-sm' : 'text-fg-3 hover:text-fg'}`}
             >
-              {o.label}
+              <Notation text={o.label} />
             </button>
           ))}
         </div>
       ) : (
-        <select id={id} value={value} onChange={(e) => onChange(e.target.value)} className="w-full rounded-lg border border-line bg-panel-2 px-2.5 py-1.5 text-sm text-fg focus:border-accent/60 focus:outline-none">
-          {options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+        <select id={id} value={value} onChange={(e) => onChange(e.target.value)} className="w-full cursor-pointer rounded-lg border border-line bg-panel-2 px-2.5 py-1.5 text-sm font-medium text-fg transition hover:border-line-2 focus:border-accent focus:outline-none">
+          {options.map((o) => <option key={o.value} value={o.value}>{plainNotation(o.label)}</option>)}
         </select>
       )}
-      {hint && <p className="mt-1 text-[11px] text-fg-3">{hint}</p>}
+      {hint && <p className="mt-1 text-[11.5px] text-fg-3"><Notation text={hint} /></p>}
     </div>
   );
 }
@@ -132,7 +134,7 @@ function TextField({ label, hint, value, placeholder, inputMode, onChange }: { l
   const id = useId();
   return (
     <div>
-      <label htmlFor={id} className="mb-1 block text-[13px] font-medium text-fg-2">{label}</label>
+      <label htmlFor={id} className="mb-1 block text-[13px] font-medium text-fg-2"><Notation text={label} /></label>
       <input
         id={id}
         value={value}
@@ -140,9 +142,9 @@ function TextField({ label, hint, value, placeholder, inputMode, onChange }: { l
         inputMode={inputMode}
         spellCheck={false}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-lg border border-line bg-panel-2 px-2.5 py-1.5 font-mono text-sm text-fg focus:border-accent/60 focus:outline-none"
+        className="w-full rounded-lg border border-line bg-panel-2 px-2.5 py-1.5 font-mono text-sm text-fg transition hover:border-line-2 focus:border-accent focus:outline-none"
       />
-      {hint && <p className="mt-1 text-[11px] text-fg-3">{hint}</p>}
+      {hint && <p className="mt-1 text-[11.5px] text-fg-3"><Notation text={hint} /></p>}
     </div>
   );
 }

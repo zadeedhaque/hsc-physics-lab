@@ -84,8 +84,7 @@ export function Glyph({ name, className = '' }: { name: GlyphName; className?: s
     <svg viewBox="0 0 96 64" className={className} fill="none" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"
       style={{
         ['--glyph-accent' as string]: 'var(--accent)', ['--glyph-b' as string]: 'var(--fg-2)', ['--glyph-c' as string]: 'var(--warn)',
-        ['--glyph-muted' as string]: 'var(--fg-3)', ['--glyph-pos' as string]: 'var(--bad)', ['--glyph-neg' as string]: 'var(--accent)',
-        ['--glyph-light' as string]: '#eab308', ['--glyph-hot' as string]: '#f97316',
+        ['--glyph-muted' as string]: 'var(--fg-3)', ['--glyph-pos' as string]: 'var(--bad)', ['--glyph-neg' as string]: '#4f8df5',
       }}>
       {G[name]}
     </svg>

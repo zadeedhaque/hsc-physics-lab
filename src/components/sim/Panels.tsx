@@ -1,9 +1,10 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import type { Equation, Learn, Readout } from '../../sims/types';
 import { fmt } from '../../lib/num';
+import { plainNotation } from '../../lib/notation';
 import { t } from '../../content/strings';
 import { IconChevronDown } from '../icons';
-import { MathText } from './MathText';
+import { MathText, Notation } from './MathText';
 import { actions, useApp } from '../../state/store';
 import { cachedLearnBn, loadLearnBn } from '../../content/learnBn/load';
 import type { LearnBn } from '../../content/learnBn/types';
@@ -11,15 +12,17 @@ import type { LearnBn } from '../../content/learnBn/types';
 export function Section({ title, icon, children, defaultOpen = true, right, highlight = false }: { title: string; icon?: ReactNode; children: ReactNode; defaultOpen?: boolean; right?: ReactNode; highlight?: boolean }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <section className={highlight ? 'param-card m-3 rounded-xl px-4 py-3.5' : 'border-b border-line px-4 py-3.5 last:border-b-0'}>
+    <section className={highlight ? 'param-card m-3 rounded-2xl px-4 pb-4 pt-3.5' : 'border-b border-line px-4 py-3.5 last:border-b-0'}>
       <div className="flex items-center gap-2">
-        <button type="button" onClick={() => setOpen(!open)} aria-expanded={open} className={`flex flex-1 items-center gap-2 text-left uppercase tracking-wider hover:text-fg ${highlight ? 'text-[12px] font-bold text-accent' : 'text-[11px] font-semibold text-fg-3'}`}>
-          {icon}{title}
-          <IconChevronDown size={13} className={`ml-auto transition-transform ${open ? '' : '-rotate-90'}`} />
+        <button type="button" onClick={() => setOpen(!open)} aria-expanded={open}
+          className="group flex flex-1 items-center gap-2 text-left text-[14px] font-bold tracking-[-0.005em] text-fg">
+          <span className={`grid h-6 w-6 place-items-center rounded-md ${highlight ? 'bg-accent text-accent-fg' : 'bg-panel-3 text-fg-2 group-hover:text-fg'}`}>{icon}</span>
+          {title}
+          <IconChevronDown size={15} className={`ml-auto text-fg-3 transition-transform group-hover:text-fg ${open ? '' : '-rotate-90'}`} />
         </button>
         {right}
       </div>
-      {open && <div className="mt-3">{children}</div>}
+      {open && <div className="mt-3.5">{children}</div>}
     </section>
   );
 }
@@ -34,11 +37,11 @@ export function ResultsGrid({ readouts }: { readouts: Readout[] }) {
   return (
     <dl className="grid grid-cols-2 gap-2" aria-live="off">
       {readouts.map((r) => (
-        <div key={r.label} className="rounded-lg border border-line bg-panel-2 px-2.5 py-2">
-          <dt className="truncate text-[11px] text-fg-3" title={r.label}>{r.label}</dt>
-          <dd className={`mt-0.5 flex items-baseline gap-1 font-mono text-[15px] font-medium leading-tight ${toneClass[r.tone ?? 'default']}`}>
-            <span className="break-all">{formatReadout(r)}</span>
-            {r.unit && <span className="shrink-0 text-[11px] font-normal text-fg-3">{r.unit}</span>}
+        <div key={r.label} className="rounded-lg border border-line bg-panel-2 px-3 py-2">
+          <dt className="truncate text-[11.5px] font-medium text-fg-3" title={plainNotation(r.label)}><Notation text={r.label} /></dt>
+          <dd className={`mt-1 flex items-baseline gap-1 font-mono text-[15px] font-medium leading-tight ${toneClass[r.tone ?? 'default']}`}>
+            <span className="break-all"><Notation text={formatReadout(r)} /></span>
+            {r.unit && <span className="shrink-0 text-[11px] font-normal text-fg-3"><Notation text={r.unit} /></span>}
           </dd>
         </div>
       ))}
@@ -52,8 +55,8 @@ export function EquationList({ equations }: { equations: Equation[] }) {
       {equations.map((eq, i) => (
         <li key={i} className="rounded-lg border border-line bg-panel-2 px-3 py-2">
           <p className="math font-mono text-[14px] text-fg"><MathText text={eq.expr} /></p>
-          {eq.sub && <p className="math mt-1 break-words font-mono text-[12px] text-accent"><MathText text={eq.sub} /></p>}
-          {eq.note && <p className="mt-0.5 text-[11px] text-fg-3">{eq.note}</p>}
+          {eq.sub && <p className="math mt-0.5 break-words border-t border-dashed border-line pt-0.5 font-mono text-[12.5px] text-accent"><MathText text={eq.sub} /></p>}
+          {eq.note && <p className="mt-0.5 text-[11.5px] text-fg-3"><Notation text={eq.note} /></p>}
         </li>
       ))}
     </ul>
@@ -70,33 +73,35 @@ interface LearnView { concept: string; variables: [string, string][]; observe: s
 function LearnBody({ view, lang }: { view: LearnView; lang: 'en' | 'bn' }) {
   const L = LEARN_LABELS[lang];
   return (
-    <div className="space-y-4 text-sm" lang={lang}>
+    <div className="space-y-5 text-[14px]" lang={lang}>
       <div>
-        <h4 className="mb-1 text-xs font-semibold text-fg">{L.concept}</h4>
-        <p className="leading-relaxed text-fg-2">{view.concept}</p>
+        <h4 className="mb-1.5 text-[12.5px] font-bold text-fg">{L.concept}</h4>
+        <p className="leading-relaxed text-fg-2"><Notation text={view.concept} /></p>
       </div>
       {view.variables.length > 0 && (
         <div>
-          <h4 className="mb-1 text-xs font-semibold text-fg">{L.variables}</h4>
-          <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
+          <h4 className="mb-1.5 text-[12.5px] font-bold text-fg">{L.variables}</h4>
+          <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5 rounded-lg border border-line bg-panel-2 px-3 py-2.5">
             {view.variables.map(([sym, meaning]) => (
               <div key={sym} className="contents">
-                <dt className="font-mono text-accent" lang="en">{sym}</dt>
-                <dd className="text-fg-2">{meaning}</dd>
+                <dt className="font-mono text-[13px] font-medium text-accent" lang="en"><Notation text={sym} /></dt>
+                <dd className="text-fg-2"><Notation text={meaning} /></dd>
               </div>
             ))}
           </dl>
         </div>
       )}
       <div>
-        <h4 className="mb-1 text-xs font-semibold text-fg">{L.observe}</h4>
-        <ul className="list-disc space-y-1 pl-4 text-fg-2 marker:text-fg-3">
-          {view.observe.map((o) => <li key={o}>{o}</li>)}
+        <h4 className="mb-1.5 text-[12.5px] font-bold text-fg">{L.observe}</h4>
+        <ul className="space-y-1.5 text-fg-2">
+          {view.observe.map((o) => (
+            <li key={o} className="relative pl-4 leading-relaxed before:absolute before:left-0.5 before:top-[0.6em] before:h-1.5 before:w-1.5 before:rounded-full before:bg-accent/60"><Notation text={o} /></li>
+          ))}
         </ul>
       </div>
-      <div className="rounded-lg border border-accent/30 bg-accent-soft px-3 py-2.5">
-        <h4 className="mb-1 text-xs font-semibold text-accent">{L.challenge}</h4>
-        <p className="text-fg">{view.challenge}</p>
+      <div className="rounded-xl border border-accent/25 bg-accent-soft px-3.5 py-3">
+        <h4 className="mb-1 text-[12.5px] font-bold text-accent">{L.challenge}</h4>
+        <p className="leading-relaxed text-fg"><Notation text={view.challenge} /></p>
       </div>
     </div>
   );
@@ -120,7 +125,7 @@ export function LearnPanel({ learn, bnKey }: { learn: Learn; bnKey: string }) {
 
   const tab = (value: 'en' | 'bn', label: string) => (
     <button type="button" role="tab" aria-selected={lang === value} onClick={() => actions.setLearnLang(value)} lang={value}
-      className={`rounded-md px-3 py-1 text-xs font-semibold transition ${lang === value ? 'bg-panel text-fg shadow-sm' : 'text-fg-3 hover:text-fg'}`}>
+      className={`press rounded-md px-3 py-1 text-xs font-bold transition ${lang === value ? 'bg-panel text-fg shadow-sm' : 'text-fg-3 hover:text-fg'}`}>
       {label}
     </button>
   );
